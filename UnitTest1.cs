@@ -32,7 +32,7 @@ namespace TestPrimeReact
             Console.WriteLine("Title verification successful..!");
             LandingPage landing = new LandingPage(WebDriver);
             landing.CheckItem("Name", "Blue Band");
-            //landing.CheckItem("Name", "Blue T-Shirt");
+            //landing.CheckItem("Name", "Bracelet");
             //landing.CheckItem("Code", "244wgerg2");
         }
 
