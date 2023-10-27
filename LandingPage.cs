@@ -13,39 +13,39 @@ namespace TestPrimeReact
             this.driver = driver;
         }
 
-        private IWebElement HeaderCheckbox => driver.FindElement(By.XPath("//h5[contains (text(), 'Checkbox')]"));
-        private IWebElement CheckboxTable => driver.FindElement(By.XPath("//h5[contains (text(), 'Checkbox')]/following-sibling::div[@class='p-datatable p-component']/div/table"));
-        private IList<IWebElement> Columns => CheckboxTable.FindElements(By.XPath("thead/tr/th"));
-        private IList<IWebElement> TRows(int col) => CheckboxTable.FindElements(By.XPath($"tbody/tr/td[{col}]"));
-        private IList<IWebElement> ItemCheckBox(int row) => CheckboxTable.FindElements(By.XPath($"tbody/tr[{row}]/td[1]"));
-        private IList<IWebElement> ItemCheckBoxValue(int row) => CheckboxTable.FindElements(By.XPath($"tbody/tr[{row}]/td[1]//input"));
+        private IWebElement headerCheckbox => driver.FindElement(By.XPath("//h5[contains (text(), 'Checkbox')]"));
+        private IWebElement checkboxTable => driver.FindElement(By.XPath("//h5[contains (text(), 'Checkbox')]/following-sibling::div[@class='p-datatable p-component']/div/table"));
+        private IList<IWebElement> columns => CheckboxTable.FindElements(By.XPath("thead/tr/th"));
+        private IList<IWebElement> tRows(int col) => CheckboxTable.FindElements(By.XPath($"tbody/tr/td[{col}]"));
+        private IList<IWebElement> itemCheckBox(int row) => CheckboxTable.FindElements(By.XPath($"tbody/tr[{row}]/td[1]"));
+        private IList<IWebElement> itemCheckBoxValue(int row) => CheckboxTable.FindElements(By.XPath($"tbody/tr[{row}]/td[1]//input"));
 
-        public void CheckItem(string Header, string Item)
+        public void CheckItem(string header, string item)
         {
             Actions actions = new Actions(driver);
-            actions.MoveToElement(HeaderCheckbox);
+            actions.MoveToElement(headerCheckbox);
             actions.Perform();
-            int row = GetTableItem(Header, Item);
+            int row = GetTableItem(header, item);
             CheckAndVerifyTableItem(row, "Update");
             CheckAndVerifyTableItem(row, "Verify");
-            Console.WriteLine($"Checkbox for {Header} - {Item} checked and verify successfully..!");
+            Console.WriteLine($"Checkbox for {header} - {item} checked and verify successfully..!");
         }
 
-        public int GetTableItem(string Header, string Item)
+        public int GetTableItem(string header, string item)
         {
             int colId = 0;
             int rowId = 0;
             Actions actions = new Actions(driver);
-            if (HeaderCheckbox.Enabled)
+            if (headerCheckbox.Enabled)
             {
-                actions.MoveToElement(CheckboxTable);
+                actions.MoveToElement(checkboxTable);
                 actions.Perform();
-                if (Columns != null)
+                if (columns != null)
                 {
-                    int colCount = Columns.Count;
-                    for (int c = 0; c < Columns.Count; c++)
+                    int colCount = columns.Count;
+                    for (int c = 0; c < colCount; c++)
                     {
-                        if (!string.IsNullOrEmpty(Columns[c].Text) && Header.Equals(Columns[c].Text))
+                        if (!string.IsNullOrEmpty(columns[c].Text) && Header.Equals(columns[c].Text))
                         {
                             colId = c + 1;
                             break;
@@ -53,11 +53,11 @@ namespace TestPrimeReact
                     }
                     if (colId > 0)
                     {
-                        int rowCount = TRows(colId).Count;
-                        for (int r = 0; r < TRows(colId).Count; r++)
+                        int rowCount = tRows(colId).Count;
+                        for (int r = 0; r < rowCount; r++)
                         {
-                            string row = TRows(colId)[r].Text;
-                            if (!string.IsNullOrEmpty(TRows(colId)[r].Text) && Item.Equals(TRows(colId)[r].Text))
+                            string row = tRows(colId)[r].Text;
+                            if (!string.IsNullOrEmpty(tRows(colId)[r].Text) && Item.Equals(tRows(colId)[r].Text))
                             {
                                 rowId = r + 1;
                                 break;
@@ -69,27 +69,27 @@ namespace TestPrimeReact
             return rowId;
         }
 
-        public void CheckAndVerifyTableItem(int rowId, string Action)
+        public void CheckAndVerifyTableItem(int rowId, string action)
         {
             int itemCount;
             if (rowId > 0)
             {
-                if (Action == "Update")
+                if (action == "Update")
                 {
-                    itemCount = ItemCheckBox(rowId).Count;
+                    itemCount = itemCheckBox(rowId).Count;
                     if (itemCount > 0)
                     {
-                        ItemCheckBox(rowId)[0].Click();
+                        itemCheckBox(rowId)[0].Click();
                         Console.WriteLine("Clicked on checkbox..!");
                     }
                 }
                 else
                 {
-                    itemCount = ItemCheckBoxValue(rowId).Count;
+                    itemCount = itemCheckBoxValue(rowId).Count;
                     if (itemCount > 0)
                     {
-                        string IsChecked = ItemCheckBoxValue(rowId)[0].GetAttribute("aria-checked");
-                        Assert.True(IsChecked.Equals("true"));
+                        string isChecked = itemCheckBoxValue(rowId)[0].GetAttribute("aria-checked");
+                        Assert.True(isChecked.Equals("true"));
                         Console.WriteLine("Checkbox is checked successfully..!");
                     }
                 }
